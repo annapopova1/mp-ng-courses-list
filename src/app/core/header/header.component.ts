@@ -22,7 +22,7 @@ import { Component, OnInit } from '@angular/core';
       color: white;
       font-weight: 600;
     }
-  
+
     .toolbar svg {
       margin: 0 16px;
     }
