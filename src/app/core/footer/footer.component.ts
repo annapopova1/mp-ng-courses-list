@@ -9,10 +9,11 @@ import { Component, OnInit } from '@angular/core';
   `,
   styles: [`
     footer {
-      margin-top: 8px;
-      display: flex;
-      align-items: center;
-      line-height: 20px;
+      color: #999;
+      background-color: #3f51b5;
+      font-size: 12px;
+      padding: 8px 16px;
+      text-align: right;
     }
   `]
 })
