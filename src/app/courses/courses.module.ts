@@ -7,13 +7,11 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { CourseItemComponent } from './course-item/course-item.component';
 import { SearchPanelComponent } from './search-panel/search-panel.component';
-import { CoursesListComponent } from './courses-list/courses-list.component';
 import { CoursesPageComponent } from './courses-page/courses-page.component';
 
 @NgModule({
   declarations: [
     SearchPanelComponent,
-    CoursesListComponent,
     CourseItemComponent,
     CoursesPageComponent,
   ],
