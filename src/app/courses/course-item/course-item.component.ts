@@ -6,21 +6,16 @@ import { Course } from '../course';
   templateUrl: './course-item.component.html',
   styleUrls: ['./course-item.component.scss']
 })
-export class CourseItemComponent implements OnInit {
+export class CourseItemComponent {
   @Input() course!: Course;
   @Output() editRequest = new EventEmitter<void>();
   @Output() deleteRequest = new EventEmitter<void>();
 
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
-  edit() {
+  editItem() {
     this.editRequest.emit();
   }
 
-  delete() {
+  deleteItem() {
     this.deleteRequest.emit();
   }
 }

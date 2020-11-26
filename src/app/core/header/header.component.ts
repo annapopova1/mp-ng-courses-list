@@ -10,7 +10,9 @@ import { Component, OnInit } from '@angular/core';
       </div>
       <div class="user-panel">
         <mat-icon>person</mat-icon> User login
-        <button mat-button color="basic" class="log-off-button"><mat-icon>exit_to_app</mat-icon> Log off</button>
+        <button mat-button color="basic" class="log-off-button" (click)="logout()">
+          <mat-icon>exit_to_app</mat-icon> Log off
+        </button>
       </div>
     </header>
   `,
@@ -23,4 +25,7 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  logout() {
+    console.log('logout');
+  }
 }
