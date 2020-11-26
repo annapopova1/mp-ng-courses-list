@@ -1,3 +1,4 @@
-<cl-course-item></cl-course-item>
-<cl-course-item></cl-course-item>
-<cl-course-item></cl-course-item>
+<cl-course-item *ngFor="let course of courses" [course]="course"></cl-course-item>
+<div class="loader-panel">
+  <button mat-button (click)="loadMore()">Load More</button>
+</div>

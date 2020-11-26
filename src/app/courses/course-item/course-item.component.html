@@ -1,9 +1,9 @@
 <mat-card class="course-item">
-  <mat-card-header>
-    <mat-card-title>The title</mat-card-title>
-    <mat-card-subtitle>1h 28 min | 9 Nov, 2020</mat-card-subtitle>
+  <mat-card-header class="card-header">
+    <mat-card-title>{{course.title}}</mat-card-title>
+    <mat-card-subtitle><mat-icon>access_time</mat-icon> {{course.duration}} <mat-icon>date_range</mat-icon> {{course.createDate}}</mat-card-subtitle>
   </mat-card-header>
-  <mat-card-content><p>Content</p></mat-card-content>
+  <mat-card-content><p>{{course.description}}</p></mat-card-content>
   <mat-card-actions>
     <button mat-raised-button color="primary"><mat-icon>edit</mat-icon> Edit</button>
     <button mat-raised-button color="primary"><mat-icon>delete</mat-icon> Delete</button>
