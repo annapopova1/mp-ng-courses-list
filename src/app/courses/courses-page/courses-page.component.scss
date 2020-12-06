@@ -1,0 +1,17 @@
+:host {
+  flex: 1;
+
+  .buttons-panel {
+    text-align: right;
+    margin: 16px 0;
+  }
+
+  .loader-panel {
+    background-color: #fff;
+    text-align: center;
+  
+    button {
+      font-size: 12px;
+    }
+  }  
+}

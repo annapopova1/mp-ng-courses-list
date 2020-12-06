@@ -1,0 +1,14 @@
+.course-item {
+  margin: 16px 0;
+
+  .card-header {
+    .mat-icon {
+      transform: scale(0.9);
+      vertical-align: bottom;
+    }
+  }
+
+  .mat-card-content {
+    color: #555;
+  }
+}

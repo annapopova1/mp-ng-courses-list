@@ -1,1 +1,8 @@
-<p>search-panel works!</p>
+<div class="search-panel">
+  <mat-form-field appearance="fill" class="search-field">
+    <mat-label>Text to search</mat-label>
+    <span matPrefix><mat-icon>search</mat-icon></span>
+    <input type="search" matInput [(ngModel)]="searchString" (keydown.enter)="search()">
+  </mat-form-field>
+  <button mat-raised-button color="accent" class="search-button" (click)="search()">Search</button>
+</div>
