@@ -7,7 +7,7 @@
   </mat-card-header>
   <mat-card-content><p>{{course.description}}</p></mat-card-content>
   <mat-card-actions>
-    <button mat-raised-button color="primary" (click)="editItem()"><mat-icon>edit</mat-icon> Edit</button>
-    <button mat-raised-button color="primary" (click)="deleteItem()"><mat-icon>delete</mat-icon> Delete</button>
+    <button mat-raised-button color="primary" (click)="editItem()" class="edit-action"><mat-icon>edit</mat-icon> Edit</button>
+    <button mat-raised-button color="primary" (click)="deleteItem()" class="delete-action"><mat-icon>delete</mat-icon> Delete</button>
   </mat-card-actions>
 </mat-card>
