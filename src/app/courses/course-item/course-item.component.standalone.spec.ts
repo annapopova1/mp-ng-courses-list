@@ -7,44 +7,26 @@ import { CourseItemComponent } from './course-item.component';
 
 const courseItem = new CourseMock('Test title', 'Test description', 100);
 
-@Component({
-  template: `
-    <cl-course-item
-      [course]="course"
-      (deleteRequest)="deleteCourse(course.id)"
-      (editRequest)="editCourse(course)">
-    </cl-course-item>`
-})
-class TestHostComponent {
-  course: Course = courseItem;
-  idToDelete?: string;
-  itemToEdit?: Course;
-  deleteCourse(id: string) {
-    this.idToDelete = id;
-  }
-  editCourse(item: Course) {
-    this.itemToEdit = item;
-  }
-}
-
-describe('CourseItemComponent', () => {
-  let component: TestHostComponent;
-  let fixture: ComponentFixture<TestHostComponent>;
+describe('CourseItemComponent - standalone', () => {
+  let component: CourseItemComponent;
+  let fixture: ComponentFixture<CourseItemComponent>;
   let courseItemDe: DebugElement;
   let courseItemEl: any;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CourseItemComponent, TestHostComponent ]
+      declarations: [ CourseItemComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TestHostComponent);
+    fixture = TestBed.createComponent(CourseItemComponent);
     component = fixture.componentInstance;
     courseItemDe = fixture.debugElement.query(By.css('.course-item'));
     courseItemEl = courseItemDe.nativeElement;
+
+    component.course = courseItem;
     fixture.detectChanges();
   });
 
@@ -57,22 +39,24 @@ describe('CourseItemComponent', () => {
     expect(courseItemEl.textContent).toContain(courseItem.description);
   });
 
-  it('should handle edit action', () => {
-    const editBtn = courseItemDe.query(By.css('.edit-action'));
-    editBtn.nativeElement.click();
-    expect(component.itemToEdit).toEqual(component.course);
+  it('should change course item data if the input changed', () => {
+    component.course = new CourseMock('Test title 2', 'Test description 2', 200);;
+    fixture.detectChanges();
+    expect(courseItemEl.textContent).toContain('Test title 2');
+    expect(courseItemEl.textContent).toContain('Test description 2');
   });
 
-  // it('should handle delete action', () => {
-  //   spyOn(component.deleteRequest, 'emit');
-  //   const editBtn = courseItemDe.query(By.css('.delete-action'));
-  //   editBtn.nativeElement.click();
-  //   expect(component.deleteRequest.emit).toHaveBeenCalled();
-  // });
+  it('should handle edit action', () => {
+    spyOn(component.editRequest, 'emit');
+    const editBtn = courseItemDe.query(By.css('.edit-action'));
+    editBtn.nativeElement.click();
+    expect(component.editRequest.emit).toHaveBeenCalled();
+  });
 
   it('should handle delete action', () => {
+    spyOn(component.deleteRequest, 'emit');
     const deleteBtn = courseItemDe.query(By.css('.delete-action'));
     deleteBtn.nativeElement.click();
-    expect(component.idToDelete).toBe(component.course.id);
+    expect(component.deleteRequest.emit).toHaveBeenCalled();
   });
 });
