@@ -11,4 +11,12 @@
   .mat-card-content {
     color: #555;
   }
+
+  .star {
+    color: #ffcc00;
+  }
+
+  &.top-rated {
+    background-color: #fff2e6;
+  }
 }
