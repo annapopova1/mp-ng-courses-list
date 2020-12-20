@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'cl-header',
@@ -8,8 +9,8 @@ import { Component, OnInit } from '@angular/core';
         <img src="../../../../favicon.ico" alt="angular" class="angular-logo">
         <span>Video Course</span>
       </div>
-      <div class="user-panel">
-        <mat-icon>person</mat-icon> User login
+      <div class="user-panel" *ngIf="authService.isAuthenticated()">
+        <mat-icon>person</mat-icon> {{authService.getUserInfo()?.firstName}}
         <button mat-button color="basic" class="log-off-button" (click)="logout()">
           <mat-icon>exit_to_app</mat-icon> Log off
         </button>
@@ -18,14 +19,11 @@ import { Component, OnInit } from '@angular/core';
   `,
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
+export class HeaderComponent {
+  constructor(public authService: AuthService) { }
 
   logout() {
     console.log('logout');
+    this.authService.logout();
   }
 }

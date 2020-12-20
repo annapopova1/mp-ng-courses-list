@@ -1,8 +1,11 @@
 <cl-header></cl-header>
-<cl-breadcrumbs></cl-breadcrumbs>
+<cl-breadcrumbs *ngIf="authService.isAuthenticated()"></cl-breadcrumbs>
 
-<div class="content">
+<div class="content" *ngIf="authService.isAuthenticated()">
   <cl-courses-page></cl-courses-page>
+</div>
+<div class="login-content" *ngIf="!authService.isAuthenticated()">
+  <cl-login-page></cl-login-page>
 </div>
 
 <cl-footer></cl-footer>

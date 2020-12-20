@@ -7,11 +7,15 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { DurationPipe } from './pipes/duration.pipe';
 import { SearchPanelComponent } from './search-panel/search-panel.component';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
     DurationPipe,
     SearchPanelComponent,
+    ConfirmDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -21,10 +25,13 @@ import { SearchPanelComponent } from './search-panel/search-panel.component';
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
+    MatDialogModule,
+    BrowserAnimationsModule,
   ],
   exports: [
     DurationPipe,
     SearchPanelComponent,
+    ConfirmDialogComponent,
   ],
 })
 export class SharedModule { }
