@@ -1,7 +1,9 @@
 import { Component, DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { DurationPipe } from 'src/app/shared/pipes/duration.pipe';
 import { Course, CourseMock } from '../course';
+import { CoursePlateBorderDirective } from '../directives/course-plate-border.directive';
 
 import { CourseItemComponent } from './course-item.component';
 
@@ -35,7 +37,7 @@ describe('CourseItemComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CourseItemComponent, TestHostComponent ]
+      declarations: [ CourseItemComponent, TestHostComponent, DurationPipe, CoursePlateBorderDirective ]
     })
     .compileComponents();
   });
@@ -53,7 +55,7 @@ describe('CourseItemComponent', () => {
   });
 
   it('should render course item data', () => {
-    expect(courseItemEl.textContent).toContain(courseItem.title);
+    expect(courseItemEl.textContent).toContain(courseItem.title.toUpperCase());
     expect(courseItemEl.textContent).toContain(courseItem.description);
   });
 

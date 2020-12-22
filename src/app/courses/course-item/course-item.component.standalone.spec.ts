@@ -1,7 +1,9 @@
 import { Component, DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { DurationPipe } from 'src/app/shared/pipes/duration.pipe';
 import { Course, CourseMock } from '../course';
+import { CoursePlateBorderDirective } from '../directives/course-plate-border.directive';
 
 import { CourseItemComponent } from './course-item.component';
 
@@ -15,7 +17,7 @@ describe('CourseItemComponent - standalone', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CourseItemComponent ]
+      declarations: [ CourseItemComponent, DurationPipe, CoursePlateBorderDirective ]
     })
     .compileComponents();
   });
@@ -35,14 +37,14 @@ describe('CourseItemComponent - standalone', () => {
   });
 
   it('should render course item data', () => {
-    expect(courseItemEl.textContent).toContain(courseItem.title);
+    expect(courseItemEl.textContent).toContain(courseItem.title.toUpperCase());
     expect(courseItemEl.textContent).toContain(courseItem.description);
   });
 
   it('should change course item data if the input changed', () => {
     component.course = new CourseMock('Test title 2', 'Test description 2', 200);;
     fixture.detectChanges();
-    expect(courseItemEl.textContent).toContain('Test title 2');
+    expect(courseItemEl.textContent).toContain('Test title 2'.toUpperCase());
     expect(courseItemEl.textContent).toContain('Test description 2');
   });
 

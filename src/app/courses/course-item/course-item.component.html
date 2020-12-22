@@ -1,8 +1,15 @@
-<mat-card class="course-item">
+<mat-card
+    class="course-item"
+    [clCoursePlateBorder]="course.createDate"
+    [ngClass]="course.topRated ? 'top-rated' : ''">
   <mat-card-header class="card-header">
-    <mat-card-title>{{course.title}}</mat-card-title>
+    <mat-card-title>
+      {{course.title | uppercase}}
+      <mat-icon class="star" *ngIf="course.topRated">star</mat-icon>
+    </mat-card-title>
     <mat-card-subtitle>
-      <mat-icon>access_time</mat-icon> {{course.duration}} <mat-icon>date_range</mat-icon> {{course.createDate}}
+      <mat-icon>access_time</mat-icon> {{course.duration | duration}}
+      <mat-icon>date_range</mat-icon> {{course.createDate | date: 'mediumDate'}}
     </mat-card-subtitle>
   </mat-card-header>
   <mat-card-content><p>{{course.description}}</p></mat-card-content>

@@ -4,14 +4,16 @@ export interface Course {
   createDate: Date;
   duration: number;
   description: string;
+  topRated: boolean;
 }
 
 export class CourseMock implements Course {
   readonly id!: string;
   createDate!: Date;
 
-  constructor(public title: string, public description: string, public duration: number) {
+  constructor(public title: string, public description: string, public duration: number, public topRated = false) {
     this.id = Math.random().toString(20).substr(2, 5);
     this.createDate = new Date();
+    this.topRated = topRated;
   }
 }

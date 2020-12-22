@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CourseMock } from '../course';
+import { OrderByPipe } from '../pipes/order-by.pipe';
 
 import { CoursesPageComponent } from './courses-page.component';
 
@@ -9,7 +10,7 @@ describe('CoursesPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CoursesPageComponent ]
+      declarations: [ CoursesPageComponent, OrderByPipe ]
     })
     .compileComponents();
   });

@@ -1,3 +1,5 @@
+<cl-search-panel (searchRequest)="searchCourse($event)"></cl-search-panel>
+
 <div class="buttons-panel">
   <button mat-raised-button color="primary" class="add-course-button">
     <mat-icon>add</mat-icon> Add course
@@ -5,12 +7,16 @@
 </div>
 
 <cl-course-item
-  *ngFor="let course of courses"
+  *ngFor="let course of courses | orderBy : 'desc'"
   [course]="course"
   (deleteRequest)="deleteCourse(course.id)"
   (editRequest)="editCourse(course)">
 </cl-course-item>
 
-<div class="loader-panel">
+<div class="loader-panel" *ngIf="courses.length > 0">
   <button mat-button (click)="loadMore()">Load More</button>
+</div>
+
+<div class="loader-panel" *ngIf="courses.length === 0">
+  No data. Feel free to add new course.
 </div>
