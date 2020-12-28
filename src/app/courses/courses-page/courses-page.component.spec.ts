@@ -61,13 +61,6 @@ describe('CoursesPageComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should handle edit course action', () => {
-    spyOn(console, 'log');
-    const courseItem = new CourseMock('Test title', 'Test description', 100);
-    component.editCourse(courseItem);
-    expect(console.log).toHaveBeenCalledWith('edit', courseItem);
-  });
-
   it('should handle delete course action', () => {
     spyOn(dialog, 'open').and.callThrough();
     const id = '123';

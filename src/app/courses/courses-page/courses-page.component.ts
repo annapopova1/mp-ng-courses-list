@@ -12,16 +12,22 @@ import { FilterPipe } from '../pipes/filter.pipe';
   providers: [FilterPipe],
 })
 export class CoursesPageComponent implements OnInit {
+  defaultCourse: Course = {
+    id: '',
+    title: '',
+    createDate: new Date(),
+    duration: 0,
+    description: '',
+    topRated: false,
+  };
   courses: Course[] = [];
+  addCoursePageShowed: boolean = false;
+  editingCourseModel?: Course;
 
   constructor(private filter: FilterPipe, private coursesService: CoursesService, private dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.courses = this.coursesService.getCourses();
-  }
-
-  editCourse(course: Course) {
-    console.log('edit', course);
   }
 
   deleteCourse(id: string) {
@@ -44,5 +50,24 @@ export class CoursesPageComponent implements OnInit {
 
   searchCourse(searchString: string) {
     this.courses = this.filter.transform(this.coursesService.getCourses(), searchString);
+  }
+
+  showAddingCoursePage(course?: Course) {
+    this.editingCourseModel = course || this.defaultCourse;
+    this.addCoursePageShowed = true;
+  }
+
+  hideAddingCoursePage() {
+    this.addCoursePageShowed = false;
+    this.editingCourseModel = undefined;
+  }
+
+  saveCourse(course: Course) {
+    if (course.id) {
+      this.coursesService.updateCourse(course);
+    } else {
+      this.coursesService.createCourse(course);
+    }
+    this.hideAddingCoursePage();
   }
 }

@@ -10,6 +10,12 @@ import { OrderByPipe } from './pipes/order-by.pipe';
 import { FilterPipe } from './pipes/filter.pipe';
 import { SharedModule } from '../shared/shared.module';
 import { CoursesService } from './courses.service';
+import { AddCoursePageComponent } from './add-course-page/add-course-page.component';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 @NgModule({
   declarations: [
@@ -18,12 +24,18 @@ import { CoursesService } from './courses.service';
     CoursePlateBorderDirective,
     OrderByPipe,
     FilterPipe,
+    AddCoursePageComponent,
   ],
   imports: [
     CommonModule,
     MatButtonModule,
     MatCardModule,
     MatIconModule,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatNativeDateModule,
+    MatDatepickerModule,
     SharedModule,
   ],
   exports: [

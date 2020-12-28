@@ -1,4 +1,4 @@
-import { Component, DebugElement } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DurationPipe } from 'src/app/shared/pipes/duration.pipe';
@@ -18,6 +18,8 @@ describe('CourseItemComponent - standalone', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ CourseItemComponent, DurationPipe, CoursePlateBorderDirective ]
+    }).overrideComponent(CourseItemComponent, {
+      set: { changeDetection: ChangeDetectionStrategy.Default }
     })
     .compileComponents();
   });
