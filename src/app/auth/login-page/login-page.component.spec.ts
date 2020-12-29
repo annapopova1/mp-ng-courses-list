@@ -1,11 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AuthService } from '../../auth/auth.service';
+import { AuthService } from '../auth.service';
 
-import { HeaderComponent } from './header.component';
+import { LoginPageComponent } from './login-page.component';
 
-describe('HeaderComponent', () => {
-  let component: HeaderComponent;
-  let fixture: ComponentFixture<HeaderComponent>;
+describe('LoginPageComponent', () => {
+  let component: LoginPageComponent;
+  let fixture: ComponentFixture<LoginPageComponent>;
 
   beforeEach(async () => {
     const authServiceSpy = jasmine.createSpyObj('AuthService', [
@@ -16,7 +16,7 @@ describe('HeaderComponent', () => {
     ]);
 
     await TestBed.configureTestingModule({
-      declarations: [ HeaderComponent ],
+      declarations: [ LoginPageComponent ],
       providers: [
         { provide: AuthService, useValue: authServiceSpy },
       ]
@@ -25,7 +25,7 @@ describe('HeaderComponent', () => {
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(HeaderComponent);
+    fixture = TestBed.createComponent(LoginPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

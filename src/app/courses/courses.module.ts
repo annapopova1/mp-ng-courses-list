@@ -9,6 +9,7 @@ import { CoursePlateBorderDirective } from './directives/course-plate-border.dir
 import { OrderByPipe } from './pipes/order-by.pipe';
 import { FilterPipe } from './pipes/filter.pipe';
 import { SharedModule } from '../shared/shared.module';
+import { CoursesService } from './courses.service';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { SharedModule } from '../shared/shared.module';
   ],
   exports: [
     CoursesPageComponent,
-  ]
+  ],
+  providers: [CoursesService],
 })
 export class CoursesModule { }

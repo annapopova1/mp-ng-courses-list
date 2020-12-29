@@ -10,9 +10,13 @@
 
   .content {
     padding: 16px;
-    min-height: calc(100% - 46px - 36px - 32px - 36px);
+    min-height: calc(100% - 52px - 36px - 32px - 36px);
     overflow: auto;
     display: flex;
     flex-direction: column;
+  }
+
+  .login-content {
+    min-height: calc(100% - 52px - 36px);
   }
 }
