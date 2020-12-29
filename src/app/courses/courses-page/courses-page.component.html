@@ -13,15 +13,17 @@
   (editRequest)="showAddingCoursePage(course)">
 </cl-course-item>
 
-<div class="loader-panel" *ngIf="courses.length > 0">
+<div class="loader-panel" *ngIf="courses.length > 0; else noCourses">
   <button mat-button (click)="loadMore()">Load More</button>
 </div>
 
-<div class="loader-panel" *ngIf="courses.length === 0">
-  No data. Feel free to add new course.
-</div>
+<ng-template #noCourses>
+  <div class="loader-panel">
+    No data. Feel free to add new course.
+  </div>
+</ng-template>
 
-<div class="add-course-page" *ngIf="addCoursePageShowed && !!editingCourseModel">
+<div class="add-course-page" *ngIf="!!editingCourseModel">
   <cl-add-course-page
     [course]="editingCourseModel"
     (saveChangesRequest)="saveCourse($event)"

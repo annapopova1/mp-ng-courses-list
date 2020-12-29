@@ -21,7 +21,6 @@ export class CoursesPageComponent implements OnInit {
     topRated: false,
   };
   courses: Course[] = [];
-  addCoursePageShowed: boolean = false;
   editingCourseModel?: Course;
 
   constructor(private filter: FilterPipe, private coursesService: CoursesService, private dialog: MatDialog) { }
@@ -52,13 +51,11 @@ export class CoursesPageComponent implements OnInit {
     this.courses = this.filter.transform(this.coursesService.getCourses(), searchString);
   }
 
-  showAddingCoursePage(course?: Course) {
-    this.editingCourseModel = course || this.defaultCourse;
-    this.addCoursePageShowed = true;
+  showAddingCoursePage(course: Course = this.defaultCourse) {
+    this.editingCourseModel = { ...course };
   }
 
   hideAddingCoursePage() {
-    this.addCoursePageShowed = false;
     this.editingCourseModel = undefined;
   }
 
