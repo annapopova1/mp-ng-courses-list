@@ -22,7 +22,7 @@ export class CoursesService {
     const updatedCourse = {
       ...course,
       id: Math.random().toString(20).substr(2, 5),
-      createDate: new Date(),
+      // createDate: new Date(),
     };
     this.courses.push(updatedCourse);
     return updatedCourse;
