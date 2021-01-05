@@ -9,16 +9,19 @@ import { DurationPipe } from './pipes/duration.pipe';
 import { SearchPanelComponent } from './search-panel/search-panel.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
     DurationPipe,
     SearchPanelComponent,
     ConfirmDialogComponent,
+    BreadcrumbsComponent,
   ],
   imports: [
     CommonModule,
+    RouterModule,
     FormsModule,
     MatIconModule,
     MatButtonModule,
@@ -26,12 +29,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MatInputModule,
     MatIconModule,
     MatDialogModule,
-    BrowserAnimationsModule,
   ],
   exports: [
     DurationPipe,
     SearchPanelComponent,
     ConfirmDialogComponent,
+    BreadcrumbsComponent,
   ],
 })
 export class SharedModule { }

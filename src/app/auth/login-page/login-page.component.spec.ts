@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
 
 import { LoginPageComponent } from './login-page.component';
@@ -8,6 +9,7 @@ describe('LoginPageComponent', () => {
   let fixture: ComponentFixture<LoginPageComponent>;
 
   beforeEach(async () => {
+    const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
     const authServiceSpy = jasmine.createSpyObj('AuthService', [
       'login',
       'logout',
@@ -19,6 +21,7 @@ describe('LoginPageComponent', () => {
       declarations: [ LoginPageComponent ],
       providers: [
         { provide: AuthService, useValue: authServiceSpy },
+        { provide: Router, useValue: routerSpy },
       ]
     })
     .compileComponents();

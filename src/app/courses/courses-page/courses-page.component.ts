@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 import { Course } from '../course';
 import { CoursesService } from '../courses.service';
@@ -12,6 +13,7 @@ import { FilterPipe } from '../pipes/filter.pipe';
   providers: [FilterPipe],
 })
 export class CoursesPageComponent implements OnInit {
+  breadcrumbs = [{ title: 'Courses' }];
   defaultCourse: Course = {
     id: '',
     title: '',
@@ -21,9 +23,8 @@ export class CoursesPageComponent implements OnInit {
     topRated: false,
   };
   courses: Course[] = [];
-  editingCourseModel?: Course;
 
-  constructor(private filter: FilterPipe, private coursesService: CoursesService, private dialog: MatDialog) { }
+  constructor(private router: Router, private route: ActivatedRoute, private filter: FilterPipe, private coursesService: CoursesService, private dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.courses = this.coursesService.getCourses();
@@ -51,20 +52,11 @@ export class CoursesPageComponent implements OnInit {
     this.courses = this.filter.transform(this.coursesService.getCourses(), searchString);
   }
 
-  showAddingCoursePage(course: Course = this.defaultCourse) {
-    this.editingCourseModel = { ...course };
+  showAddingCoursePage() {
+    this.router.navigate(['new'], { relativeTo: this.route });
   }
 
-  hideAddingCoursePage() {
-    this.editingCourseModel = undefined;
-  }
-
-  saveCourse(course: Course) {
-    if (course.id) {
-      this.coursesService.updateCourse(course);
-    } else {
-      this.coursesService.createCourse(course);
-    }
-    this.hideAddingCoursePage();
+  showEditingCoursePage(course: Course) {
+    this.router.navigate([course.id], { relativeTo: this.route });
   }
 }
