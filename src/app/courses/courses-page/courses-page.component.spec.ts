@@ -38,14 +38,13 @@ describe('CoursesPageComponent', () => {
       }),
     };
     routerSpy = jasmine.createSpyObj('Router', ['navigate']);
-    const coursesServiceSpy = jasmine.createSpyObj('CoursesService', [
-      'getCourses',
-      'createCourse',
-      'getCourseById',
-      'updateCourse',
-      'removeCourse'
-    ]);
-    coursesServiceSpy.getCourses.and.returnValue(courses);
+    const coursesServiceSpy = jasmine.createSpyObj('CoursesService', {
+      getCourses: Promise.resolve(courses),
+      createCourse: Promise.resolve(),
+      getCourseById: Promise.resolve(),
+      updateCourse: Promise.resolve(),
+      removeCourse: Promise.resolve(),
+    });
 
     await TestBed.configureTestingModule({
       imports: [NoopAnimationsModule, SharedModule],

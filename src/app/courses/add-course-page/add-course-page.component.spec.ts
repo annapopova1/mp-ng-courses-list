@@ -19,14 +19,14 @@ describe('AddCoursePageComponent', () => {
       }),
     };
     routerSpy = jasmine.createSpyObj('Router', ['navigate']);
-    const coursesServiceSpy = jasmine.createSpyObj('CoursesService', [
-      'getCourses',
-      'createCourse',
-      'getCourseById',
-      'updateCourse',
-      'removeCourse'
-    ]);
-    coursesServiceSpy.getCourses.and.returnValue([]);
+    const coursesServiceSpy = jasmine.createSpyObj('CoursesService', {
+      getCourses: Promise.resolve([]),
+      createCourse: Promise.resolve(),
+      getCourseById: Promise.resolve(),
+      updateCourse: Promise.resolve(),
+      removeCourse: Promise.resolve(),
+    });
+
     await TestBed.configureTestingModule({
       declarations: [ AddCoursePageComponent, DurationPipe ],
       providers: [

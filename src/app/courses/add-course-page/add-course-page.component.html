@@ -1,6 +1,6 @@
 <cl-breadcrumbs [items]="breadcrumbs"></cl-breadcrumbs>
 
-<div class="add-course-panel">
+<div class="add-course-panel" *ngIf="!!course">
   <h3>{{!!course.id ? 'Edit' : 'Add'}} course</h3>
   <p>
     <mat-form-field appearance="fill" class="title-field">
