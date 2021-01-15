@@ -16,6 +16,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { CoursesRoutingModule } from './courses-routing.module';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
   ],
   imports: [
     CommonModule,
+    CoursesRoutingModule,
     MatButtonModule,
     MatCardModule,
     MatIconModule,
@@ -40,6 +42,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
   ],
   exports: [
     CoursesPageComponent,
+    CoursesRoutingModule,
   ],
   providers: [CoursesService],
 })

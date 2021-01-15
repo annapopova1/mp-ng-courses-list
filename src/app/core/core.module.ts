@@ -2,16 +2,15 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
 import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
-import { AuthModule } from '../auth/auth.module';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 @NgModule({
   declarations: [
     HeaderComponent,
     FooterComponent,
-    BreadcrumbsComponent,
+    PageNotFoundComponent,
   ],
   imports: [
     CommonModule,
@@ -21,7 +20,7 @@ import { AuthModule } from '../auth/auth.module';
   exports: [
     HeaderComponent,
     FooterComponent,
-    BreadcrumbsComponent,
+    PageNotFoundComponent,
   ],
 })
 export class CoreModule { }

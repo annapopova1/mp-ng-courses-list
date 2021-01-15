@@ -1,0 +1,11 @@
+<div class="breadcrumbs">
+  <nav *ngFor="let item of items; last as isLast">
+    <span *ngIf="!isLast; else lastItem">
+      <a [routerLink]="item.path">{{item.title}}</a>
+      ->
+    </span>
+    <ng-template #lastItem>
+      {{item.title}}
+    </ng-template>
+  </nav>
+</div>

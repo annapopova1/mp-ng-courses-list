@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { CourseMock } from '../course';
@@ -27,8 +29,15 @@ describe('CoursesPageComponent', () => {
   let fixture: ComponentFixture<CoursesPageComponent>;
   let dialog: MatDialog;
   let coursesService: CoursesService;
+  let routerSpy;
 
   beforeEach(async () => {
+    const activatedRouteMock = {
+      params: of({
+        id: '123',
+      }),
+    };
+    routerSpy = jasmine.createSpyObj('Router', ['navigate']);
     const coursesServiceSpy = jasmine.createSpyObj('CoursesService', [
       'getCourses',
       'createCourse',
@@ -39,9 +48,11 @@ describe('CoursesPageComponent', () => {
     coursesServiceSpy.getCourses.and.returnValue(courses);
 
     await TestBed.configureTestingModule({
-      imports: [SharedModule],
+      imports: [NoopAnimationsModule, SharedModule],
       declarations: [ CoursesPageComponent, OrderByPipe ],
       providers: [
+        { provide: Router, useValue: routerSpy },
+        { provide: ActivatedRoute, useValue: activatedRouteMock },
         { provide: CoursesService, useValue: coursesServiceSpy },
         { provide: MatDialog, useClass: MatDialogMock }
       ]

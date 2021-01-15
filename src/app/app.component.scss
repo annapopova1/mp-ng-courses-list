@@ -7,16 +7,4 @@
   left: 0;
   right: 0;
   background-color: #f1f1f1;
-
-  .content {
-    padding: 16px;
-    min-height: calc(100% - 52px - 36px - 32px - 36px);
-    overflow: auto;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .login-content {
-    min-height: calc(100% - 52px - 36px);
-  }
 }
