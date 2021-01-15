@@ -1,5 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { Course } from './course';
 
 interface CourseInfo {
@@ -33,31 +35,29 @@ const clientDataToServerData = (course: Course): CourseInfo => ({
 
 @Injectable()
 export class CoursesService {
-  courses: Course[] = [];
-
   constructor(private http: HttpClient) {}
 
-  getCourses(searchStr = '', start = 0, count = COURSES_PAGE_LENGTH): Promise<Course[]> {
+  getCourses(searchStr = '', start = 0, count = COURSES_PAGE_LENGTH): Observable<Course[]> {
     return this.http.get<CourseInfo[]>(`${COURSES_URL}`, {
       params: { textFragment: searchStr, start: start.toString(), count: count.toString(), sort: 'date' }
-    }).toPromise().then(courses => courses.map(serverDataToClientData));
+    }).pipe(map(courses => courses.map(serverDataToClientData)));
   }
 
-  createCourse(course: Course): Promise<Course> {
+  createCourse(course: Course): Observable<Course> {
     const updatedCourse = clientDataToServerData({ ...course, id: Math.random().toString(20).substr(2, 5) });
-    return this.http.post<CourseInfo>(`${COURSES_URL}`, updatedCourse).toPromise().then(serverDataToClientData);
+    return this.http.post<CourseInfo>(`${COURSES_URL}`, updatedCourse).pipe(map(serverDataToClientData));
   }
 
-  getCourseById(courseId: string): Promise<Course> {
-    return this.http.get<CourseInfo>(`${COURSES_URL}/${courseId}`).toPromise().then(serverDataToClientData);
+  getCourseById(courseId: string): Observable<Course> {
+    return this.http.get<CourseInfo>(`${COURSES_URL}/${courseId}`).pipe(map(serverDataToClientData));
   }
 
-  updateCourse(course: Course): Promise<Course> {
+  updateCourse(course: Course): Observable<Course> {
     const updatedCourse = clientDataToServerData(course);
-    return this.http.patch<CourseInfo>(`${COURSES_URL}/${course.id}`, updatedCourse).toPromise().then(serverDataToClientData);
+    return this.http.patch<CourseInfo>(`${COURSES_URL}/${course.id}`, updatedCourse).pipe(map(serverDataToClientData));
   }
 
-  removeCourse(courseId: string) {
-    return this.http.delete<CourseInfo>(`${COURSES_URL}/${courseId}`).toPromise();
+  removeCourse(courseId: string): Observable<CourseInfo> {
+    return this.http.delete<CourseInfo>(`${COURSES_URL}/${courseId}`);
   }
 }

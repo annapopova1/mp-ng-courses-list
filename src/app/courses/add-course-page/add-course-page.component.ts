@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Observable, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { BreadcrumbItem } from 'src/app/shared/breadcrumbs/breadcrumbs.component';
 import { Course } from '../course';
 import { CoursesService } from '../courses.service';
@@ -28,7 +30,7 @@ export class AddCoursePageComponent implements OnInit {
     this.route.params.subscribe(params => {
       const id = params.id;
       if (id) {
-        this.coursesService.getCourseById(id).then(course => {
+        this.coursesService.getCourseById(id).subscribe(course => {
           this.course = course;
           this.breadcrumbs = [{ title: 'Courses', path: ['../'] }, { title: this.course.title }];
           this.cdRef.markForCheck();
@@ -41,12 +43,13 @@ export class AddCoursePageComponent implements OnInit {
   }
 
   save() {
-    if (this.course.id) {
-      this.coursesService.updateCourse(this.course);
-    } else {
-      this.coursesService.createCourse(this.course);
-    }
-    this.cancel();
+    of(true).pipe(
+      switchMap(() => {
+        return (this.course.id)
+          ? this.coursesService.updateCourse(this.course)
+          : this.coursesService.createCourse(this.course);
+      })
+    ).subscribe(() => this.cancel());
   }
 
   cancel() {
