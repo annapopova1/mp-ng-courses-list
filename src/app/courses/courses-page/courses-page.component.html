@@ -9,7 +9,7 @@
 </div>
 
 <cl-course-item
-  *ngFor="let course of courses | orderBy : 'desc'"
+  *ngFor="let course of courses"
   [course]="course"
   (deleteRequest)="deleteCourse(course.id)"
   (editRequest)="showEditingCoursePage(course)">

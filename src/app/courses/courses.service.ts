@@ -1,54 +1,63 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Course, CourseMock } from './course';
+import { Course } from './course';
+
+interface CourseInfo {
+  id: number;
+  name: string;
+  description: string;
+  isTopRated: boolean;
+  date: string;
+  length: number;
+}
+
+const COURSES_URL = 'http://localhost:3004/courses';
+const COURSES_PAGE_LENGTH = 5;
+
+const serverDataToClientData = (courseItem: CourseInfo): Course => ({
+  id: courseItem.id.toString(),
+  title: courseItem.name,
+  createDate: new Date(courseItem.date),
+  duration: courseItem.length,
+  description: courseItem.description,
+  topRated: courseItem.isTopRated,
+});
+const clientDataToServerData = (course: Course): CourseInfo => ({
+  id: +course.id,
+  name: course.title,
+  date: course.createDate.toISOString(),
+  length: course.duration,
+  description: course.description,
+  isTopRated: course.topRated,
+});
 
 @Injectable()
 export class CoursesService {
   courses: Course[] = [];
 
-  constructor() {
-    const c0 = new CourseMock('Tile', 'Description', 100, true);
-    const c1 = new CourseMock('Tile 1', 'Description 1', 40, false);
-    c1.createDate = new Date(c1.createDate.getTime() + 2 * 24 * 60 * 1000);
-    const c2 = new CourseMock('Tile 2', 'Description 2', 140, false);
-    c2.createDate = new Date(c2.createDate.getTime() - 15 * 24 * 60 * 1000);
-    this.courses = [c0, c1, c2];
+  constructor(private http: HttpClient) {}
+
+  getCourses(searchStr = '', start = 0, count = COURSES_PAGE_LENGTH): Promise<Course[]> {
+    return this.http.get<CourseInfo[]>(`${COURSES_URL}`, {
+      params: { textFragment: searchStr, start: start.toString(), count: count.toString(), sort: 'date' }
+    }).toPromise().then(courses => courses.map(serverDataToClientData));
   }
 
-  getCourses(): Course[] {
-    return this.courses;
+  createCourse(course: Course): Promise<Course> {
+    const updatedCourse = clientDataToServerData({ ...course, id: Math.random().toString(20).substr(2, 5) });
+    return this.http.post<CourseInfo>(`${COURSES_URL}`, updatedCourse).toPromise().then(serverDataToClientData);
   }
 
-  createCourse(course: Course): Course {
-    const updatedCourse = {
-      ...course,
-      id: Math.random().toString(20).substr(2, 5),
-      // createDate: new Date(),
-    };
-    this.courses.push(updatedCourse);
-    return updatedCourse;
+  getCourseById(courseId: string): Promise<Course> {
+    return this.http.get<CourseInfo>(`${COURSES_URL}/${courseId}`).toPromise().then(serverDataToClientData);
   }
 
-  getCourseById(courseId: string): Course | undefined {
-    return this.courses.find(({ id }) => id === courseId);
-  }
-
-  updateCourse(course: Course): Course {
-    const courseToUpdate = this.courses.find(({ id }) => id === course.id);
-    if (!courseToUpdate) {
-      throw new Error('Course item is not found to be updated');
-    }
-    const index = this.courses.indexOf(courseToUpdate);
-    const updatedCourse = { ...courseToUpdate, ...course };
-    this.courses[index] = updatedCourse;
-    return updatedCourse;
+  updateCourse(course: Course): Promise<Course> {
+    const updatedCourse = clientDataToServerData(course);
+    return this.http.patch<CourseInfo>(`${COURSES_URL}/${course.id}`, updatedCourse).toPromise().then(serverDataToClientData);
   }
 
   removeCourse(courseId: string) {
-    const courseToRemove = this.courses.find(({ id }) => id === courseId);
-    if (!courseToRemove) {
-      throw new Error('Course item is not found to be removed');
-    }
-    const index = this.courses.indexOf(courseToRemove);
-    this.courses.splice(index, 1);
+    return this.http.delete<CourseInfo>(`${COURSES_URL}/${courseId}`).toPromise();
   }
 }

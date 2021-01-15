@@ -11,7 +11,7 @@ import { AuthService } from '../../auth/auth.service';
         <span>Video Course</span>
       </div>
       <div class="user-panel" *ngIf="authService.isAuthenticated()">
-        <mat-icon>person</mat-icon> {{authService.getUserInfo()?.firstName}}
+        <mat-icon>person</mat-icon> {{authService.userInfo?.firstName}}
         <button mat-button color="basic" class="log-off-button" (click)="logout()">
           <mat-icon>exit_to_app</mat-icon> Log off
         </button>

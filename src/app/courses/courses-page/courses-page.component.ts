@@ -13,6 +13,7 @@ import { FilterPipe } from '../pipes/filter.pipe';
   providers: [FilterPipe],
 })
 export class CoursesPageComponent implements OnInit {
+  searchString = '';
   breadcrumbs = [{ title: 'Courses' }];
   defaultCourse: Course = {
     id: '',
@@ -27,7 +28,7 @@ export class CoursesPageComponent implements OnInit {
   constructor(private router: Router, private route: ActivatedRoute, private filter: FilterPipe, private coursesService: CoursesService, private dialog: MatDialog) { }
 
   ngOnInit(): void {
-    this.courses = this.coursesService.getCourses();
+    this.findCourses();
   }
 
   deleteCourse(id: string) {
@@ -39,17 +40,22 @@ export class CoursesPageComponent implements OnInit {
     });
     confirmDialog.afterClosed().subscribe(result => {
       if (result) {
-        this.coursesService.removeCourse(id);
+        this.coursesService.removeCourse(id).then(() => this.findCourses());
       }
     });
   }
 
   loadMore() {
     console.log('click on Load More btn');
+    const startIndex = this.courses.length;
+    if (startIndex) {
+      this.coursesService.getCourses(this.searchString, startIndex).then(courses => this.courses = [...this.courses, ...courses]);
+    }
   }
 
   searchCourse(searchString: string) {
-    this.courses = this.filter.transform(this.coursesService.getCourses(), searchString);
+    this.searchString = searchString;
+    this.findCourses();
   }
 
   showAddingCoursePage() {
@@ -58,5 +64,9 @@ export class CoursesPageComponent implements OnInit {
 
   showEditingCoursePage(course: Course) {
     this.router.navigate([course.id], { relativeTo: this.route });
+  }
+
+  private findCourses() {
+    this.coursesService.getCourses(this.searchString).then(courses => this.courses = courses);
   }
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BreadcrumbItem } from 'src/app/shared/breadcrumbs/breadcrumbs.component';
 import { Course } from '../course';
@@ -22,17 +22,21 @@ export class AddCoursePageComponent implements OnInit {
   };
   course!: Course;
 
-  constructor (private route: ActivatedRoute, private router: Router, private coursesService: CoursesService) {}
+  constructor (private route: ActivatedRoute, private router: Router, private coursesService: CoursesService, private cdRef: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       const id = params.id;
       if (id) {
-        this.course = this.coursesService.getCourseById(id) || this.defaultCourse;
+        this.coursesService.getCourseById(id).then(course => {
+          this.course = course;
+          this.breadcrumbs = [{ title: 'Courses', path: ['../'] }, { title: this.course.title }];
+          this.cdRef.markForCheck();
+        });
       } else {
         this.course = this.defaultCourse;
+        this.breadcrumbs = [{ title: 'Courses', path: ['../'] }, { title: 'New Course' }];
       }
-      this.breadcrumbs = [{ title: 'Courses', path: ['../'] }, { title: this.course.title || 'New Course' }];
     });
   }
 
