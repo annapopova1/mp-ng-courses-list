@@ -10,8 +10,8 @@ import { AuthService } from '../../auth/auth.service';
         <img src="../../../../favicon.ico" alt="angular" class="angular-logo">
         <span>Video Course</span>
       </div>
-      <div class="user-panel" *ngIf="authService.isAuthenticated()">
-        <mat-icon>person</mat-icon> {{authService.userInfo?.firstName}}
+      <div class="user-panel" *ngIf="authService.userInfo$ | async as currentUser">
+        <mat-icon>person</mat-icon> {{currentUser.firstName}}
         <button mat-button color="basic" class="log-off-button" (click)="logout()">
           <mat-icon>exit_to_app</mat-icon> Log off
         </button>

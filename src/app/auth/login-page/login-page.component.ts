@@ -17,7 +17,7 @@ export class LoginPageComponent implements OnInit {
   }
 
   login() {
-    this.authService.login(this.email, this.password).then(() => {
+    this.authService.login(this.email, this.password).subscribe(() => {
       this.router.navigate(['courses']);
       console.log('Logged in successfully');
     });
