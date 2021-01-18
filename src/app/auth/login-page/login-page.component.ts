@@ -20,6 +20,8 @@ export class LoginPageComponent implements OnInit {
     this.authService.login(this.email, this.password).subscribe(() => {
       this.router.navigate(['courses']);
       console.log('Logged in successfully');
-    });
+    },
+    err => console.log('-----err-----', err),
+    () => '---complete---');
   }
 }

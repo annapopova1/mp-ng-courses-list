@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, combineLatest, Observable, Subject, Subscription } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, Observable, of, Subject, Subscription, throwError } from 'rxjs';
+import { catchError, finalize, switchMap, tap } from 'rxjs/operators';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 import { Course } from '../course';
 import { CoursesService } from '../courses.service';
@@ -46,7 +46,12 @@ export class CoursesPageComponent implements OnInit {
                 this._courses$.next(
                   startIndex ? [...this._courses$.value, ...courses] : courses
                 );
-              })
+              }),
+              catchError((err: Error) => {
+                console.log('---- catchError courses ----', err);
+                return of([]);
+              }),
+              finalize(()=> console.log('---- finalize ----'))
             )
         ),
         switchMap(() => {
@@ -64,7 +69,14 @@ export class CoursesPageComponent implements OnInit {
     });
     confirmDialog.afterClosed().subscribe((result) => {
       if (result) {
-        this.coursesService.removeCourse(id).subscribe(() => this.startIndex$.next(0));
+        this.coursesService.removeCourse(id)
+          .pipe(
+            catchError(err => {
+              console.log('---- test err ----');
+              return throwError(err);
+            })
+          )
+          .subscribe(() => this.startIndex$.next(0));
       }
     });
   }
