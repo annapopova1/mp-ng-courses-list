@@ -1,6 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../../auth/auth.service';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { logout } from '../../+state/auth.actions';
+import { User } from '../../auth/user';
+import { AuthState } from '../../+state/auth.reducer';
+import { selectAuthUser } from '../../+state/auth.selectors';
 
 @Component({
   selector: 'cl-header',
@@ -10,7 +15,7 @@ import { AuthService } from '../../auth/auth.service';
         <img src="../../../../favicon.ico" alt="angular" class="angular-logo">
         <span>Video Course</span>
       </div>
-      <div class="user-panel" *ngIf="authService.userInfo$ | async as currentUser">
+      <div class="user-panel" *ngIf="userInfo$ | async as currentUser">
         <mat-icon>person</mat-icon> {{currentUser.firstName}}
         <button mat-button color="basic" class="log-off-button" (click)="logout()">
           <mat-icon>exit_to_app</mat-icon> Log off
@@ -20,12 +25,18 @@ import { AuthService } from '../../auth/auth.service';
   `,
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent {
-  constructor(public authService: AuthService, private router: Router) { }
+export class HeaderComponent implements OnInit {
+  userInfo$!: Observable<User | null>;
+
+  constructor(private router: Router, private store: Store<{auth: AuthState}>) {}
+
+  ngOnInit(): void {
+    this.userInfo$ = this.store.select(selectAuthUser);
+  }
 
   logout() {
     console.log('logout');
-    this.authService.logout();
+    this.store.dispatch(logout());
     this.router.navigate(['login']);
   }
 }

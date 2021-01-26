@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { AuthService } from '../auth.service';
+import { Store } from '@ngrx/store';
+import { login } from 'src/app/+state/auth.actions';
 
 @Component({
   selector: 'cl-login-page',
@@ -11,17 +11,12 @@ export class LoginPageComponent implements OnInit {
   email: string = '';
   password: string = '';
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private store: Store) { }
 
   ngOnInit(): void {
   }
 
   login() {
-    this.authService.login(this.email, this.password).subscribe(() => {
-      this.router.navigate(['courses']);
-      console.log('Logged in successfully');
-    },
-    err => console.log('-----err-----', err),
-    () => '---complete---');
+    this.store.dispatch(login({ email: this.email, password: this.password }));
   }
 }
