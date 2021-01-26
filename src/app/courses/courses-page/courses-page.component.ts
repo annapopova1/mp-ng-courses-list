@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, Observable, of, Subject, Subscription, throwError } from 'rxjs';
@@ -12,7 +12,7 @@ import { CoursesService } from '../courses.service';
   templateUrl: './courses-page.component.html',
   styleUrls: ['./courses-page.component.scss'],
 })
-export class CoursesPageComponent implements OnInit {
+export class CoursesPageComponent implements OnInit, OnDestroy {
   breadcrumbs = [{ title: 'Courses' }];
   defaultCourse: Course = {
     id: '',
@@ -22,6 +22,7 @@ export class CoursesPageComponent implements OnInit {
     description: '',
     topRated: false,
   };
+  deleteCourseSubscription!: Subscription;
 
   courses$!: Observable<Course[]>;
   _courses$: BehaviorSubject<Course[]> = new BehaviorSubject<Course[]>([]);
@@ -60,6 +61,12 @@ export class CoursesPageComponent implements OnInit {
       );
   }
 
+  ngOnDestroy(): void {
+    if (this.deleteCourseSubscription) {
+      this.deleteCourseSubscription.unsubscribe();
+    }
+  }
+
   deleteCourse(id: string) {
     const confirmDialog = this.dialog.open(ConfirmDialogComponent, {
       data: {
@@ -67,16 +74,15 @@ export class CoursesPageComponent implements OnInit {
         message: 'Do you really want to delete this course?',
       },
     });
-    confirmDialog.afterClosed().subscribe((result) => {
-      if (result) {
-        this.coursesService.removeCourse(id)
-          .pipe(
-            catchError(err => {
-              console.log('---- test err ----');
-              return throwError(err);
-            })
-          )
-          .subscribe(() => this.startIndex$.next(0));
+    this.deleteCourseSubscription = confirmDialog.afterClosed().pipe(
+      switchMap(result => result ? this.coursesService.removeCourse(id) : of(null)),
+      catchError(err => {
+        console.log('---- test err ----');
+        return throwError(err);
+      })
+    ).subscribe((courseInfo) => {
+      if (courseInfo) {
+        this.startIndex$.next(0)
       }
     });
   }
