@@ -1,9 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { of } from 'rxjs';
 import { DurationPipe } from 'src/app/shared/pipes/duration.pipe';
-import { CourseMock } from '../course';
-import { CoursesService } from '../courses.service';
 
 import { AddCoursePageComponent } from './add-course-page.component';
 
@@ -11,6 +10,8 @@ describe('AddCoursePageComponent', () => {
   let component: AddCoursePageComponent;
   let fixture: ComponentFixture<AddCoursePageComponent>;
   let routerSpy;
+  let store: MockStore;
+  const initialState = { courses: {} };
 
   beforeEach(async () => {
     const activatedRouteMock = {
@@ -19,26 +20,19 @@ describe('AddCoursePageComponent', () => {
       }),
     };
     routerSpy = jasmine.createSpyObj('Router', ['navigate']);
-    const coursesServiceSpy = jasmine.createSpyObj('CoursesService', {
-      getCourses: of([]),
-      createCourse: of(),
-      getCourseById: of(),
-      updateCourse: of(),
-      removeCourse: of(),
-    });
 
     await TestBed.configureTestingModule({
-      declarations: [ AddCoursePageComponent, DurationPipe ],
+      declarations: [AddCoursePageComponent, DurationPipe],
       providers: [
         { provide: ActivatedRoute, useValue: activatedRouteMock },
         { provide: Router, useValue: routerSpy },
-        { provide: CoursesService, useValue: coursesServiceSpy },
+        provideMockStore({ initialState }),
       ],
-    })
-    .compileComponents();
+    }).compileComponents();
   });
 
   beforeEach(() => {
+    store = TestBed.inject(MockStore);
     fixture = TestBed.createComponent(AddCoursePageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
