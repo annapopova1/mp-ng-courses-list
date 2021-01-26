@@ -1,8 +1,17 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
-import { BreadcrumbItem } from 'src/app/shared/breadcrumbs/breadcrumbs.component';
+import { Store } from '@ngrx/store';
+import { Subscription } from 'rxjs';
+import { loadCourse, saveOrUpdateCourse } from '../../+state/courses.actions';
+import { selectEditedCourse } from '../../+state/courses.selectors';
+import { AppState } from '../../+state';
+import { BreadcrumbItem } from '../../shared/breadcrumbs/breadcrumbs.component';
 import { Course } from '../course';
 import { CoursesService } from '../courses.service';
 
@@ -12,44 +21,53 @@ import { CoursesService } from '../courses.service';
   styleUrls: ['./add-course-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AddCoursePageComponent implements OnInit {
+export class AddCoursePageComponent implements OnInit, OnDestroy {
   breadcrumbs: BreadcrumbItem[] = [{ title: 'Courses' }];
-  defaultCourse: Course = {
-    id: '',
-    title: '',
-    createDate: new Date(),
-    duration: 0,
-    description: '',
-    topRated: false,
-  };
-  course!: Course;
+  loadCourseSubscription!: Subscription;
+  course!: Course | null;
 
-  constructor (private route: ActivatedRoute, private router: Router, private coursesService: CoursesService, private cdRef: ChangeDetectorRef) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private cdRef: ChangeDetectorRef,
+    private store: Store<AppState>
+  ) {}
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
+    this.loadCourseSubscription = this.store
+      .select(selectEditedCourse)
+      .subscribe((course) => {
+        if (course) {
+          this.course = { ...course };
+          this.breadcrumbs = [
+            { title: 'Courses', path: ['../'] },
+            { title: this.course.title },
+          ];
+        } else {
+          this.course = null;
+          this.breadcrumbs = [
+            { title: 'Courses', path: ['../'] },
+            { title: 'New Course' },
+          ];
+        }
+        this.cdRef.markForCheck();
+      });
+    this.route.params.subscribe((params) => {
       const id = params.id;
-      if (id) {
-        this.coursesService.getCourseById(id).subscribe(course => {
-          this.course = course;
-          this.breadcrumbs = [{ title: 'Courses', path: ['../'] }, { title: this.course.title }];
-          this.cdRef.markForCheck();
-        });
-      } else {
-        this.course = this.defaultCourse;
-        this.breadcrumbs = [{ title: 'Courses', path: ['../'] }, { title: 'New Course' }];
-      }
+      this.store.dispatch(loadCourse({ id }));
     });
   }
 
+  ngOnDestroy(): void {
+    if (this.loadCourseSubscription) {
+      this.loadCourseSubscription.unsubscribe();
+    }
+  }
+
   save() {
-    of(true).pipe(
-      switchMap(() => {
-        return (this.course.id)
-          ? this.coursesService.updateCourse(this.course)
-          : this.coursesService.createCourse(this.course);
-      })
-    ).subscribe(() => this.cancel());
+    if (this.course) {
+      this.store.dispatch(saveOrUpdateCourse({ course: this.course }));
+    }
   }
 
   cancel() {
@@ -57,6 +75,12 @@ export class AddCoursePageComponent implements OnInit {
   }
 
   actionAllowed() {
-    return this.course.title && this.course.description && this.course.createDate && this.course.duration;
+    return (
+      this.course &&
+      this.course.title &&
+      this.course.description &&
+      this.course.createDate &&
+      this.course.duration
+    );
   }
 }

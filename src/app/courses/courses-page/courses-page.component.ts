@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, combineLatest, Observable, of, Subject, Subscription, throwError } from 'rxjs';
-import { catchError, finalize, switchMap, tap } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { AppState } from 'src/app/+state';
+import { deleteCourse, loadCourses } from 'src/app/+state/courses.actions';
+import { selectCourses } from 'src/app/+state/courses.selectors';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 import { Course } from '../course';
-import { CoursesService } from '../courses.service';
 
 @Component({
   selector: 'cl-courses-page',
@@ -14,50 +16,22 @@ import { CoursesService } from '../courses.service';
 })
 export class CoursesPageComponent implements OnInit {
   breadcrumbs = [{ title: 'Courses' }];
-  defaultCourse: Course = {
-    id: '',
-    title: '',
-    createDate: new Date(),
-    duration: 0,
-    description: '',
-    topRated: false,
-  };
+  searchString = '';
 
   courses$!: Observable<Course[]>;
-  _courses$: BehaviorSubject<Course[]> = new BehaviorSubject<Course[]>([]);
-  startIndex$: Subject<number> = new BehaviorSubject<number>(0);
-  searchString$: Subject<string> = new BehaviorSubject<string>('');
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private coursesService: CoursesService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private store: Store<AppState>
   ) {}
 
   ngOnInit(): void {
-    this.courses$ = combineLatest([this.startIndex$, this.searchString$])
-      .pipe(
-        switchMap(([startIndex, searchString]) =>
-          this.coursesService
-            .getCourses(searchString, startIndex)
-            .pipe(
-              tap((courses) => {
-                this._courses$.next(
-                  startIndex ? [...this._courses$.value, ...courses] : courses
-                );
-              }),
-              catchError((err: Error) => {
-                console.log('---- catchError courses ----', err);
-                return of([]);
-              }),
-              finalize(()=> console.log('---- finalize ----'))
-            )
-        ),
-        switchMap(() => {
-          return this._courses$.asObservable();
-        })
-      );
+    this.store.dispatch(
+      loadCourses({ startIndex: 0, filter: this.searchString })
+    );
+    this.courses$ = this.store.select(selectCourses);
   }
 
   deleteCourse(id: string) {
@@ -69,25 +43,21 @@ export class CoursesPageComponent implements OnInit {
     });
     confirmDialog.afterClosed().subscribe((result) => {
       if (result) {
-        this.coursesService.removeCourse(id)
-          .pipe(
-            catchError(err => {
-              console.log('---- test err ----');
-              return throwError(err);
-            })
-          )
-          .subscribe(() => this.startIndex$.next(0));
+        this.store.dispatch(deleteCourse({ id }));
       }
     });
   }
 
   loadMore(startIndex: number) {
     console.log('click on Load More btn');
-    this.startIndex$.next(startIndex);
+    this.store.dispatch(loadCourses({ startIndex, filter: this.searchString }));
   }
 
   searchCourse(searchString: string) {
-    this.searchString$.next(searchString);
+    this.searchString = searchString;
+    this.store.dispatch(
+      loadCourses({ startIndex: 0, filter: this.searchString })
+    );
   }
 
   showAddingCoursePage() {
