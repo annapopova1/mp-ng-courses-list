@@ -1,8 +1,14 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { of, Subscription } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
-import { BreadcrumbItem } from 'src/app/shared/breadcrumbs/breadcrumbs.component';
+import { of } from 'rxjs';
+import { switchMap, takeUntil } from 'rxjs/operators';
+import { Unsubscriber } from '../../core/unsubscribe.service';
+import { BreadcrumbItem } from '../../shared/breadcrumbs/breadcrumbs.component';
 import { Course } from '../course';
 import { CoursesService } from '../courses.service';
 
@@ -11,8 +17,9 @@ import { CoursesService } from '../courses.service';
   templateUrl: './add-course-page.component.html',
   styleUrls: ['./add-course-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [Unsubscriber],
 })
-export class AddCoursePageComponent implements OnInit, OnDestroy {
+export class AddCoursePageComponent implements OnInit {
   breadcrumbs: BreadcrumbItem[] = [{ title: 'Courses' }];
   defaultCourse: Course = {
     id: '',
@@ -23,22 +30,22 @@ export class AddCoursePageComponent implements OnInit, OnDestroy {
     topRated: false,
   };
   course!: Course;
-  loadCourseSubscription!: Subscription;
-  saveCourseSubscription?: Subscription;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private coursesService: CoursesService,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    private unsubscriber: Unsubscriber
   ) {}
 
   ngOnInit(): void {
-    this.loadCourseSubscription = this.route.params
+    this.route.params
       .pipe(
         switchMap(({ id }) => {
           return id ? this.coursesService.getCourseById(id) : of(null);
-        })
+        }),
+        takeUntil(this.unsubscriber)
       )
       .subscribe((course) => {
         if (course) {
@@ -58,20 +65,13 @@ export class AddCoursePageComponent implements OnInit, OnDestroy {
       });
   }
 
-  ngOnDestroy(): void {
-    if (this.loadCourseSubscription) {
-      this.loadCourseSubscription.unsubscribe();
-    }
-    if (this.saveCourseSubscription) {
-      this.saveCourseSubscription.unsubscribe();
-    }
-  }
-
   save() {
-    this.saveCourseSubscription = (this.course.id
+    (this.course.id
       ? this.coursesService.updateCourse(this.course)
       : this.coursesService.createCourse(this.course)
-    ).subscribe(() => this.cancel());
+    )
+      .pipe(takeUntil(this.unsubscriber))
+      .subscribe(() => this.cancel());
   }
 
   cancel() {

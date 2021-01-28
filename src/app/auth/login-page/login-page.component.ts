@@ -1,28 +1,24 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { Unsubscriber } from 'src/app/core/unsubscribe.service';
 import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'cl-login-page',
   templateUrl: './login-page.component.html',
-  styleUrls: ['./login-page.component.scss']
+  styleUrls: ['./login-page.component.scss'],
+  providers: [Unsubscriber]
 })
-export class LoginPageComponent implements OnDestroy {
+export class LoginPageComponent {
   email: string = '';
   password: string = '';
-  loginSubscription!: Subscription;
 
-  constructor(private authService: AuthService, private router: Router) { }
-
-  ngOnDestroy(): void {
-    if (this.loginSubscription) {
-      this.loginSubscription.unsubscribe();
-    }
-  }
+  constructor(private authService: AuthService, private router: Router, private unsubscriber: Unsubscriber) { }
 
   login() {
-    this.loginSubscription = this.authService.login(this.email, this.password).subscribe(() => {
+    this.authService.login(this.email, this.password).pipe(takeUntil(this.unsubscriber)).subscribe(() => {
       this.router.navigate(['courses']);
       console.log('Logged in successfully');
     },
