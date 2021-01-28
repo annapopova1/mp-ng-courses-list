@@ -5,7 +5,7 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { first, switchMap } from 'rxjs/operators';
 import { AppState } from '../+state';
@@ -24,7 +24,8 @@ export class AuthInterceptor implements HttpInterceptor {
     if (req.url.includes('/auth/')) {
       return next.handle(req);
     }
-    return this.store.select(selectAuthToken).pipe(
+    return this.store.pipe(
+      select(selectAuthToken),
       first(),
       switchMap((token) => {
         const authReq = !!token

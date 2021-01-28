@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { logout } from '../../+state/auth/auth.actions';
 import { User } from '../../auth/user';
@@ -36,7 +36,7 @@ export class HeaderComponent implements OnInit {
   constructor(private router: Router, private store: Store<AppState>) {}
 
   ngOnInit(): void {
-    this.userInfo$ = this.store.select(selectAuthUser);
+    this.userInfo$ = this.store.pipe(select(selectAuthUser));
   }
 
   logout() {

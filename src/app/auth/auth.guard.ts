@@ -9,7 +9,7 @@ import {
   UrlSegment,
   UrlTree,
 } from '@angular/router';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AppState } from '../+state';
@@ -22,7 +22,8 @@ export class AuthGuard implements CanActivate, CanLoad {
   constructor(private router: Router, private store: Store<AppState>) {}
 
   checkAuth() {
-    return this.store.select(isAuthenticated).pipe(
+    return this.store.pipe(
+      select(isAuthenticated),
       map((isAuth) => {
         if (!isAuth) {
           this.router.navigate(['/login']);

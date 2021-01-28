@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { AppState } from '../../+state';
 import {
@@ -34,7 +34,7 @@ export class CoursesPageComponent implements OnInit {
     this.store.dispatch(
       loadCourses({ startIndex: 0, filter: this.searchString })
     );
-    this.courses$ = this.store.select(selectCourses);
+    this.courses$ = this.store.pipe(select(selectCourses));
   }
 
   deleteCourse(id: string) {
