@@ -9,7 +9,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { first, switchMap } from 'rxjs/operators';
 import { AppState } from '../+state';
-import { selectAuthToken } from '../+state/auth.selectors';
+import { selectAuthToken } from '../+state/auth/auth.selectors';
 
 @Injectable({
   providedIn: 'root',

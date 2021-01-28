@@ -17,9 +17,9 @@ import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { EffectsModule } from '@ngrx/effects';
-import { AuthEffects } from './+state/auth.effects';
+import { AuthEffects } from './+state/auth/auth.effects';
 import { appReducers } from './+state';
-import { CoursesEffects } from './+state/courses.effects';
+import { CoursesEffects } from './+state/courses/courses.effects';
 
 @NgModule({
   declarations: [AppComponent],

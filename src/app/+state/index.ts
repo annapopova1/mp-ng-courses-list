@@ -1,5 +1,5 @@
-import { authReducer, AuthState } from './auth.reducer';
-import { coursesReducer, CoursesState } from './courses.reducer';
+import { authReducer, AuthState } from './auth/auth.reducer';
+import { coursesReducer, CoursesState } from './courses/courses.reducer';
 
 export interface AppState {
   auth: AuthState;

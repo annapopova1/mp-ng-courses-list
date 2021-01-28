@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { Course } from '../courses/course';
+import { Course } from '../../courses/course';
 import { saveCourses, saveEditedCourse } from './courses.actions';
 
 export interface CoursesState {

@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { logout } from '../../+state/auth.actions';
+import { logout } from '../../+state/auth/auth.actions';
 import { User } from '../../auth/user';
-import { selectAuthUser } from '../../+state/auth.selectors';
-import { AppState } from 'src/app/+state';
+import { selectAuthUser } from '../../+state/auth/auth.selectors';
+import { AppState } from '../../+state';
 
 @Component({
   selector: 'cl-header',

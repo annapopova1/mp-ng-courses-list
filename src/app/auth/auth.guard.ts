@@ -13,7 +13,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AppState } from '../+state';
-import { isAuthenticated } from '../+state/auth.selectors';
+import { isAuthenticated } from '../+state/auth/auth.selectors';
 
 @Injectable({
   providedIn: 'root',

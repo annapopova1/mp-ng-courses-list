@@ -8,12 +8,14 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
-import { loadCourse, saveOrUpdateCourse } from '../../+state/courses.actions';
-import { selectEditedCourse } from '../../+state/courses.selectors';
+import {
+  loadCourse,
+  saveOrUpdateCourse,
+} from '../../+state/courses/courses.actions';
+import { selectEditedCourse } from '../../+state/courses/courses.selectors';
 import { AppState } from '../../+state';
 import { BreadcrumbItem } from '../../shared/breadcrumbs/breadcrumbs.component';
 import { Course } from '../course';
-import { CoursesService } from '../courses.service';
 
 @Component({
   selector: 'cl-add-course-page',

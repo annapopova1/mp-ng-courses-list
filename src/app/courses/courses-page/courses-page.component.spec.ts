@@ -4,18 +4,17 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute, Router } from '@angular/router';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
 import { of } from 'rxjs';
-import { deleteCourse } from '../../+state/courses.actions';
 import { SharedModule } from '../../shared/shared.module';
 import { CourseMock } from '../course';
 import { OrderByPipe } from '../pipes/order-by.pipe';
 import { CoursesPageComponent } from './courses-page.component';
 
-const c0 = new CourseMock('Tile', 'Description', 100, true);
-const c1 = new CourseMock('Tile 1', 'Description 1', 40, false);
-c1.createDate = new Date(c1.createDate.getTime() + 2 * 24 * 60 * 1000);
-const c2 = new CourseMock('Tile 2', 'Description 2', 140, false);
-c2.createDate = new Date(c2.createDate.getTime() - 15 * 24 * 60 * 1000);
-const courses = [c0, c1, c2];
+// const c0 = new CourseMock('Tile', 'Description', 100, true);
+// const c1 = new CourseMock('Tile 1', 'Description 1', 40, false);
+// c1.createDate = new Date(c1.createDate.getTime() + 2 * 24 * 60 * 1000);
+// const c2 = new CourseMock('Tile 2', 'Description 2', 140, false);
+// c2.createDate = new Date(c2.createDate.getTime() - 15 * 24 * 60 * 1000);
+// const courses = [c0, c1, c2];
 
 class MatDialogMock {
   open() {

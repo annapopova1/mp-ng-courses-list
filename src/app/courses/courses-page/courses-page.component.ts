@@ -3,9 +3,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { AppState } from 'src/app/+state';
-import { deleteCourse, loadCourses } from 'src/app/+state/courses.actions';
-import { selectCourses } from 'src/app/+state/courses.selectors';
+import { AppState } from '../../+state';
+import {
+  deleteCourse,
+  loadCourses,
+} from '../../+state/courses/courses.actions';
+import { selectCourses } from '../../+state/courses/courses.selectors';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 import { Course } from '../course';
 

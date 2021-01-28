@@ -1,7 +1,7 @@
-import { createReducer, on, On } from "@ngrx/store";
-import { LS_KEY, LS_TOKEN_KEY } from "../auth/auth.service";
-import { User } from "../auth/user";
-import { logout, saveAuthInfo } from "./auth.actions";
+import { createReducer, on, On } from '@ngrx/store';
+import { LS_KEY, LS_TOKEN_KEY } from '../../auth/auth.service';
+import { User } from '../../auth/user';
+import { logout, saveAuthInfo } from './auth.actions';
 
 export interface AuthState {
   token: string | null;
@@ -14,10 +14,10 @@ const getUserFromLS = (): User | null => {
   if (userInfoStr) {
     try {
       userInfo = JSON.parse(userInfoStr);
-    } catch(e) {}
+    } catch (e) {}
   }
   return userInfo;
-}
+};
 
 const initialState: AuthState = {
   token: localStorage.getItem(LS_TOKEN_KEY),
@@ -36,7 +36,8 @@ const _authReducer = createReducer(
     localStorage.removeItem(LS_TOKEN_KEY);
     localStorage.removeItem(LS_KEY);
     return { ...state, token: null, user: null };
-  }),
+  })
 );
 
-export const authReducer = (state: AuthState | undefined, action: any) => _authReducer(state, action);
+export const authReducer = (state: AuthState | undefined, action: any) =>
+  _authReducer(state, action);

@@ -4,9 +4,9 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { EMPTY, of } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-import { AppState } from '.';
-import { Course } from '../courses/course';
-import { CoursesService } from '../courses/courses.service';
+import { AppState } from '..';
+import { Course } from '../../courses/course';
+import { CoursesService } from '../../courses/courses.service';
 import {
   deleteCourse,
   loadCourse,
