@@ -5,12 +5,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { LoaderComponent } from './loader/loader.component';
 
 @NgModule({
   declarations: [
     HeaderComponent,
     FooterComponent,
     PageNotFoundComponent,
+    LoaderComponent,
   ],
   imports: [
     CommonModule,
@@ -21,6 +23,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
     HeaderComponent,
     FooterComponent,
     PageNotFoundComponent,
+    LoaderComponent,
   ],
 })
 export class CoreModule { }

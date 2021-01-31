@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { AuthService } from '../../auth/auth.service';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
 
 import { HeaderComponent } from './header.component';
 
@@ -8,27 +8,23 @@ describe('HeaderComponent', () => {
   let component: HeaderComponent;
   let fixture: ComponentFixture<HeaderComponent>;
   let routerSpy;
+  let store: MockStore;
+  const initialState = { auth: { user: null } };
 
   beforeEach(async () => {
     routerSpy = jasmine.createSpyObj('Router', ['navigate']);
-    const authServiceSpy = jasmine.createSpyObj('AuthService', [
-      'login',
-      'logout',
-      'isAuthenticated',
-      'getUserInfo',
-    ]);
 
     await TestBed.configureTestingModule({
-      declarations: [ HeaderComponent ],
+      declarations: [HeaderComponent],
       providers: [
         { provide: Router, useValue: routerSpy },
-        { provide: AuthService, useValue: authServiceSpy },
-      ]
-    })
-    .compileComponents();
+        provideMockStore({ initialState }),
+      ],
+    }).compileComponents();
   });
 
   beforeEach(() => {
+    store = TestBed.inject(MockStore);
     fixture = TestBed.createComponent(HeaderComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

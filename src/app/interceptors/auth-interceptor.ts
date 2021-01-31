@@ -1,21 +1,38 @@
-import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
-import { AuthService } from "../auth/auth.service";
+import {
+  HttpEvent,
+  HttpHandler,
+  HttpInterceptor,
+  HttpRequest,
+} from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { select, Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { first, switchMap } from 'rxjs/operators';
+import { AppState } from '../+state';
+import { selectAuthToken } from '../+state/auth/auth.selectors';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private authService: AuthService) {}
+  constructor(private store: Store<AppState>) {}
 
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  intercept(
+    req: HttpRequest<any>,
+    next: HttpHandler
+  ): Observable<HttpEvent<any>> {
     if (req.url.includes('/auth/')) {
       return next.handle(req);
     }
-    const authReq = req.clone({
-      headers: req.headers.set('Authorization', this.authService.token || '')
-    });
-    return next.handle(authReq);
+    return this.store.pipe(
+      select(selectAuthToken),
+      first(),
+      switchMap((token) => {
+        const authReq = !!token
+          ? req.clone({ setHeaders: { Authorization: 'Bearer ' + token } })
+          : req;
+        return next.handle(authReq);
+      })
+    );
   }
 }

@@ -2,7 +2,7 @@
   <mat-form-field appearance="fill" class="search-field">
     <mat-label>Text to search</mat-label>
     <span matPrefix><mat-icon>search</mat-icon></span>
-    <input type="search" matInput [(ngModel)]="searchString" (keydown.enter)="search()">
+    <input type="search" matInput #searchInput>
   </mat-form-field>
-  <button mat-raised-button color="accent" class="search-button" (click)="search()">Search</button>
+  <!-- <button mat-raised-button color="accent" class="search-button" (click)="search()">Search</button> -->
 </div>

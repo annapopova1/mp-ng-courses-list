@@ -1,25 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { AuthService } from '../auth.service';
+import { Store } from '@ngrx/store';
+import { login } from '../../+state/auth/auth.actions';
 
 @Component({
   selector: 'cl-login-page',
   templateUrl: './login-page.component.html',
-  styleUrls: ['./login-page.component.scss']
+  styleUrls: ['./login-page.component.scss'],
 })
 export class LoginPageComponent implements OnInit {
   email: string = '';
   password: string = '';
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private store: Store) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   login() {
-    this.authService.login(this.email, this.password).then(() => {
-      this.router.navigate(['courses']);
-      console.log('Logged in successfully');
-    });
+    this.store.dispatch(login({ email: this.email, password: this.password }));
   }
 }

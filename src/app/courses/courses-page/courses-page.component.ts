@@ -1,34 +1,40 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import { select, Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { AppState } from '../../+state';
+import {
+  deleteCourse,
+  loadCourses,
+} from '../../+state/courses/courses.actions';
+import { selectCourses } from '../../+state/courses/courses.selectors';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 import { Course } from '../course';
-import { CoursesService } from '../courses.service';
-import { FilterPipe } from '../pipes/filter.pipe';
 
 @Component({
   selector: 'cl-courses-page',
   templateUrl: './courses-page.component.html',
   styleUrls: ['./courses-page.component.scss'],
-  providers: [FilterPipe],
 })
 export class CoursesPageComponent implements OnInit {
-  searchString = '';
   breadcrumbs = [{ title: 'Courses' }];
-  defaultCourse: Course = {
-    id: '',
-    title: '',
-    createDate: new Date(),
-    duration: 0,
-    description: '',
-    topRated: false,
-  };
-  courses: Course[] = [];
+  searchString = '';
 
-  constructor(private router: Router, private route: ActivatedRoute, private filter: FilterPipe, private coursesService: CoursesService, private dialog: MatDialog) { }
+  courses$!: Observable<Course[]>;
+
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private dialog: MatDialog,
+    private store: Store<AppState>
+  ) {}
 
   ngOnInit(): void {
-    this.findCourses();
+    this.store.dispatch(
+      loadCourses({ startIndex: 0, filter: this.searchString })
+    );
+    this.courses$ = this.store.pipe(select(selectCourses));
   }
 
   deleteCourse(id: string) {
@@ -36,26 +42,25 @@ export class CoursesPageComponent implements OnInit {
       data: {
         title: 'Confirm Remove Course',
         message: 'Do you really want to delete this course?',
-      }
+      },
     });
-    confirmDialog.afterClosed().subscribe(result => {
+    confirmDialog.afterClosed().subscribe((result) => {
       if (result) {
-        this.coursesService.removeCourse(id).then(() => this.findCourses());
+        this.store.dispatch(deleteCourse({ id }));
       }
     });
   }
 
-  loadMore() {
+  loadMore(startIndex: number) {
     console.log('click on Load More btn');
-    const startIndex = this.courses.length;
-    if (startIndex) {
-      this.coursesService.getCourses(this.searchString, startIndex).then(courses => this.courses = [...this.courses, ...courses]);
-    }
+    this.store.dispatch(loadCourses({ startIndex, filter: this.searchString }));
   }
 
   searchCourse(searchString: string) {
     this.searchString = searchString;
-    this.findCourses();
+    this.store.dispatch(
+      loadCourses({ startIndex: 0, filter: this.searchString })
+    );
   }
 
   showAddingCoursePage() {
@@ -64,9 +69,5 @@ export class CoursesPageComponent implements OnInit {
 
   showEditingCoursePage(course: Course) {
     this.router.navigate([course.id], { relativeTo: this.route });
-  }
-
-  private findCourses() {
-    this.coursesService.getCourses(this.searchString).then(courses => this.courses = courses);
   }
 }
