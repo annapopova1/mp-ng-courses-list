@@ -20,11 +20,11 @@ describe('AddCoursePageComponent', () => {
     };
     routerSpy = jasmine.createSpyObj('Router', ['navigate']);
     const coursesServiceSpy = jasmine.createSpyObj('CoursesService', {
-      getCourses: Promise.resolve([]),
-      createCourse: Promise.resolve(),
-      getCourseById: Promise.resolve(),
-      updateCourse: Promise.resolve(),
-      removeCourse: Promise.resolve(),
+      getCourses: of([]),
+      createCourse: of(),
+      getCourseById: of(),
+      updateCourse: of(),
+      removeCourse: of(),
     });
 
     await TestBed.configureTestingModule({

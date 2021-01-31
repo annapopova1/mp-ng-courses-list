@@ -1,19 +1,33 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import {
+  BehaviorSubject,
+  combineLatest,
+  Observable,
+  of,
+  Subject,
+  throwError,
+} from 'rxjs';
+import {
+  catchError,
+  finalize,
+  switchMap,
+  takeUntil,
+  tap,
+} from 'rxjs/operators';
+import { Unsubscriber } from '../../core/unsubscribe.service';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 import { Course } from '../course';
 import { CoursesService } from '../courses.service';
-import { FilterPipe } from '../pipes/filter.pipe';
 
 @Component({
   selector: 'cl-courses-page',
   templateUrl: './courses-page.component.html',
   styleUrls: ['./courses-page.component.scss'],
-  providers: [FilterPipe],
+  providers: [Unsubscriber],
 })
 export class CoursesPageComponent implements OnInit {
-  searchString = '';
   breadcrumbs = [{ title: 'Courses' }];
   defaultCourse: Course = {
     id: '',
@@ -23,12 +37,40 @@ export class CoursesPageComponent implements OnInit {
     description: '',
     topRated: false,
   };
-  courses: Course[] = [];
 
-  constructor(private router: Router, private route: ActivatedRoute, private filter: FilterPipe, private coursesService: CoursesService, private dialog: MatDialog) { }
+  courses$!: Observable<Course[]>;
+  _courses$: BehaviorSubject<Course[]> = new BehaviorSubject<Course[]>([]);
+  startIndex$: Subject<number> = new BehaviorSubject<number>(0);
+  searchString$: Subject<string> = new BehaviorSubject<string>('');
+
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private coursesService: CoursesService,
+    private dialog: MatDialog,
+    private unsubscriber: Unsubscriber
+  ) {}
 
   ngOnInit(): void {
-    this.findCourses();
+    this.courses$ = combineLatest([this.startIndex$, this.searchString$]).pipe(
+      switchMap(([startIndex, searchString]) =>
+        this.coursesService.getCourses(searchString, startIndex).pipe(
+          tap((courses) => {
+            this._courses$.next(
+              startIndex ? [...this._courses$.value, ...courses] : courses
+            );
+          }),
+          catchError((err: Error) => {
+            console.log('---- catchError courses ----', err);
+            return of([]);
+          }),
+          finalize(() => console.log('---- finalize ----'))
+        )
+      ),
+      switchMap(() => {
+        return this._courses$.asObservable();
+      })
+    );
   }
 
   deleteCourse(id: string) {
@@ -36,26 +78,34 @@ export class CoursesPageComponent implements OnInit {
       data: {
         title: 'Confirm Remove Course',
         message: 'Do you really want to delete this course?',
-      }
+      },
     });
-    confirmDialog.afterClosed().subscribe(result => {
-      if (result) {
-        this.coursesService.removeCourse(id).then(() => this.findCourses());
-      }
-    });
+    confirmDialog
+      .afterClosed()
+      .pipe(
+        switchMap((result) =>
+          result ? this.coursesService.removeCourse(id) : of(null)
+        ),
+        catchError((err) => {
+          console.log('---- test err ----');
+          return throwError(err);
+        }),
+        takeUntil(this.unsubscriber)
+      )
+      .subscribe((courseInfo) => {
+        if (courseInfo) {
+          this.startIndex$.next(0);
+        }
+      });
   }
 
-  loadMore() {
+  loadMore(startIndex: number) {
     console.log('click on Load More btn');
-    const startIndex = this.courses.length;
-    if (startIndex) {
-      this.coursesService.getCourses(this.searchString, startIndex).then(courses => this.courses = [...this.courses, ...courses]);
-    }
+    this.startIndex$.next(startIndex);
   }
 
   searchCourse(searchString: string) {
-    this.searchString = searchString;
-    this.findCourses();
+    this.searchString$.next(searchString);
   }
 
   showAddingCoursePage() {
@@ -64,9 +114,5 @@ export class CoursesPageComponent implements OnInit {
 
   showEditingCoursePage(course: Course) {
     this.router.navigate([course.id], { relativeTo: this.route });
-  }
-
-  private findCourses() {
-    this.coursesService.getCourses(this.searchString).then(courses => this.courses = courses);
   }
 }

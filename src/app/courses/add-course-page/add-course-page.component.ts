@@ -1,6 +1,14 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BreadcrumbItem } from 'src/app/shared/breadcrumbs/breadcrumbs.component';
+import { of } from 'rxjs';
+import { switchMap, takeUntil } from 'rxjs/operators';
+import { Unsubscriber } from '../../core/unsubscribe.service';
+import { BreadcrumbItem } from '../../shared/breadcrumbs/breadcrumbs.component';
 import { Course } from '../course';
 import { CoursesService } from '../courses.service';
 
@@ -9,6 +17,7 @@ import { CoursesService } from '../courses.service';
   templateUrl: './add-course-page.component.html',
   styleUrls: ['./add-course-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [Unsubscriber],
 })
 export class AddCoursePageComponent implements OnInit {
   breadcrumbs: BreadcrumbItem[] = [{ title: 'Courses' }];
@@ -22,31 +31,47 @@ export class AddCoursePageComponent implements OnInit {
   };
   course!: Course;
 
-  constructor (private route: ActivatedRoute, private router: Router, private coursesService: CoursesService, private cdRef: ChangeDetectorRef) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private coursesService: CoursesService,
+    private cdRef: ChangeDetectorRef,
+    private unsubscriber: Unsubscriber
+  ) {}
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      const id = params.id;
-      if (id) {
-        this.coursesService.getCourseById(id).then(course => {
+    this.route.params
+      .pipe(
+        switchMap(({ id }) => {
+          return id ? this.coursesService.getCourseById(id) : of(null);
+        }),
+        takeUntil(this.unsubscriber)
+      )
+      .subscribe((course) => {
+        if (course) {
           this.course = course;
-          this.breadcrumbs = [{ title: 'Courses', path: ['../'] }, { title: this.course.title }];
+          this.breadcrumbs = [
+            { title: 'Courses', path: ['../'] },
+            { title: this.course.title },
+          ];
           this.cdRef.markForCheck();
-        });
-      } else {
-        this.course = this.defaultCourse;
-        this.breadcrumbs = [{ title: 'Courses', path: ['../'] }, { title: 'New Course' }];
-      }
-    });
+        } else {
+          this.course = this.defaultCourse;
+          this.breadcrumbs = [
+            { title: 'Courses', path: ['../'] },
+            { title: 'New Course' },
+          ];
+        }
+      });
   }
 
   save() {
-    if (this.course.id) {
-      this.coursesService.updateCourse(this.course);
-    } else {
-      this.coursesService.createCourse(this.course);
-    }
-    this.cancel();
+    (this.course.id
+      ? this.coursesService.updateCourse(this.course)
+      : this.coursesService.createCourse(this.course)
+    )
+      .pipe(takeUntil(this.unsubscriber))
+      .subscribe(() => this.cancel());
   }
 
   cancel() {
@@ -54,6 +79,11 @@ export class AddCoursePageComponent implements OnInit {
   }
 
   actionAllowed() {
-    return this.course.title && this.course.description && this.course.createDate && this.course.duration;
+    return (
+      this.course.title &&
+      this.course.description &&
+      this.course.createDate &&
+      this.course.duration
+    );
   }
 }
