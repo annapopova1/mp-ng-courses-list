@@ -11,12 +11,13 @@ import { FilterPipe } from './pipes/filter.pipe';
 import { SharedModule } from '../shared/shared.module';
 import { CoursesService } from './courses.service';
 import { AddCoursePageComponent } from './add-course-page/add-course-page.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { CoursesRoutingModule } from './courses-routing.module';
+import { DateInputComponent } from './date-input/date-input.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { CoursesRoutingModule } from './courses-routing.module';
     OrderByPipe,
     FilterPipe,
     AddCoursePageComponent,
+    DateInputComponent,
   ],
   imports: [
     CommonModule,
@@ -34,16 +36,14 @@ import { CoursesRoutingModule } from './courses-routing.module';
     MatCardModule,
     MatIconModule,
     FormsModule,
+    ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatNativeDateModule,
     MatDatepickerModule,
     SharedModule,
   ],
-  exports: [
-    CoursesPageComponent,
-    CoursesRoutingModule,
-  ],
+  exports: [CoursesPageComponent, CoursesRoutingModule],
   providers: [CoursesService],
 })
-export class CoursesModule { }
+export class CoursesModule {}

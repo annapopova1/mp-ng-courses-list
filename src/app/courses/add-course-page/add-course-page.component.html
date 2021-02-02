@@ -1,34 +1,43 @@
 <cl-breadcrumbs [items]="breadcrumbs"></cl-breadcrumbs>
 
-<div class="add-course-panel" *ngIf="!!course">
+<form class="add-course-panel" *ngIf="!!course" [formGroup]="fields" (ngSubmit)="save()">
   <h3>{{!!course.id ? 'Edit' : 'Add'}} course</h3>
   <p>
     <mat-form-field appearance="fill" class="title-field">
       <mat-label>Title</mat-label>
-      <input type="text" required matInput [(ngModel)]="course.title">
+      <input type="text" matInput [formControl]="titleControl">
+      <mat-error *ngIf="titleControl.errors?.required">You must enter a value</mat-error>
+      <mat-error *ngIf="titleControl.errors?.maxlength">Max allowed length {{titleControl.errors?.maxlength?.requiredLength}} symbols</mat-error>
     </mat-form-field>
   </p>
   <p>
     <mat-form-field appearance="fill" class="description-field">
       <mat-label>Description</mat-label>
-      <textarea required matInput [(ngModel)]="course.description"></textarea>
+      <textarea matInput [formControl]="descriptionControl"></textarea>
+      <mat-error *ngIf="descriptionControl.errors?.required">You must enter a value</mat-error>
+      <mat-error *ngIf="descriptionControl.errors?.maxlength">Max allowed length {{descriptionControl.errors?.maxlength?.requiredLength}} symbols</mat-error>
     </mat-form-field>
   </p>
   <p>
-    <mat-form-field appearance="fill" class="date-field">
+    <!-- <mat-form-field appearance="fill" class="date-field">
       <mat-label>Date</mat-label>
-      <input matInput [matDatepicker]="picker" [(ngModel)]="course.createDate">
+      <input matInput [matDatepicker]="picker" [formControl]="createDateControl">
+      <mat-error *ngIf="createDateControl.errors?.required">You must enter a value</mat-error>
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
+    </mat-form-field> -->
+    <cl-date-input [formControl]="createDateControl"></cl-date-input>
+    <mat-error *ngIf="createDateControl.errors?.required">You must enter a value</mat-error>
+    <mat-error *ngIf="createDateControl.errors?.formatError">You must enter a valid date value with dd/mm/yyyy format</mat-error>
   </p>
   <p>
     <mat-form-field appearance="fill" class="duration-field">
       <mat-label>Duration</mat-label>
-      <input type="number" required matInput [(ngModel)]="course.duration">
+      <input type="number" matInput [formControl]="durationControl">
+      <mat-error *ngIf="durationControl.errors?.required">You must enter a value</mat-error>
     </mat-form-field>
-    {{course.duration | duration}}
+    {{durationControl.value | duration}}
   </p>
-  <button mat-raised-button color="accent" class="save-button" [disabled]="!actionAllowed()" (click)="save()">Save</button>
+  <button mat-raised-button color="accent" class="save-button" [disabled]="!fields.valid">Save</button>
   <button mat-raised-button color="basic" class="cancel-button" (click)="cancel()">Cancel</button>
-</div>
+</form>
