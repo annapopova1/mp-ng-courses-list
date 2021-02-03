@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
 
@@ -18,13 +19,13 @@ describe('LoginPageComponent', () => {
     ]);
 
     await TestBed.configureTestingModule({
-      declarations: [ LoginPageComponent ],
+      imports: [FormsModule],
+      declarations: [LoginPageComponent],
       providers: [
         { provide: AuthService, useValue: authServiceSpy },
         { provide: Router, useValue: routerSpy },
-      ]
-    })
-    .compileComponents();
+      ],
+    }).compileComponents();
   });
 
   beforeEach(() => {

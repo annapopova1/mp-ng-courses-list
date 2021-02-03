@@ -1,9 +1,16 @@
+import { formatDate } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   OnInit,
 } from '@angular/core';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
@@ -30,13 +37,19 @@ export class AddCoursePageComponent implements OnInit {
     topRated: false,
   };
   course!: Course;
+  fields!: FormGroup;
+  titleControl!: FormControl;
+  descriptionControl!: FormControl;
+  createDateControl!: FormControl;
+  durationControl!: FormControl;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private coursesService: CoursesService,
     private cdRef: ChangeDetectorRef,
-    private unsubscriber: Unsubscriber
+    private unsubscriber: Unsubscriber,
+    private fb: FormBuilder
   ) {}
 
   ngOnInit(): void {
@@ -62,13 +75,47 @@ export class AddCoursePageComponent implements OnInit {
             { title: 'New Course' },
           ];
         }
+        this.initForm();
       });
   }
 
+  initForm() {
+    this.titleControl = new FormControl(this.course.title, [
+      Validators.required,
+      Validators.maxLength(50),
+    ]);
+    this.descriptionControl = new FormControl(this.course.description, [
+      Validators.required,
+      Validators.maxLength(500),
+    ]);
+    this.createDateControl = new FormControl(
+      formatDate(this.course.createDate, 'dd/MM/yyyy', 'en'),
+      [Validators.required]
+    );
+    this.durationControl = new FormControl(this.course.duration, [
+      Validators.required,
+    ]);
+    this.fields = this.fb.group({
+      title: this.titleControl,
+      description: this.descriptionControl,
+      createDate: this.createDateControl,
+      duration: this.durationControl,
+    });
+  }
+
   save() {
-    (this.course.id
-      ? this.coursesService.updateCourse(this.course)
-      : this.coursesService.createCourse(this.course)
+    const dateParts = this.fields.value.createDate.split('/');
+    const createDate = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
+
+    const entityToSave = {
+      ...this.course,
+      ...this.fields.value,
+      createDate,
+    };
+
+    (entityToSave.id
+      ? this.coursesService.updateCourse(entityToSave)
+      : this.coursesService.createCourse(entityToSave)
     )
       .pipe(takeUntil(this.unsubscriber))
       .subscribe(() => this.cancel());
@@ -76,14 +123,5 @@ export class AddCoursePageComponent implements OnInit {
 
   cancel() {
     this.router.navigate(['../']);
-  }
-
-  actionAllowed() {
-    return (
-      this.course.title &&
-      this.course.description &&
-      this.course.createDate &&
-      this.course.duration
-    );
   }
 }

@@ -1,16 +1,18 @@
-<div class="login-panel">
+<form #f="ngForm" (ngSubmit)="login()" class="login-panel">
   <h3>Login</h3>
   <p>
     <mat-form-field appearance="fill" class="email-field">
       <mat-label>E-mail</mat-label>
-      <input type="email" required matInput [(ngModel)]="email">
+      <input type="email" name="login" required matInput #userLogin="ngModel" [(ngModel)]="email">
+      <mat-error *ngIf="userLogin.invalid">You must enter a value</mat-error>
     </mat-form-field>
   </p>
   <p>
     <mat-form-field appearance="fill" class="password-field">
       <mat-label>Password</mat-label>
-      <input type="password" required matInput [(ngModel)]="password">
+      <input type="password" name="password" required matInput #userPassword="ngModel" [(ngModel)]="password">
+      <mat-error *ngIf="userPassword.invalid">You must enter a value</mat-error>
     </mat-form-field>
   </p>
-  <button mat-raised-button color="accent" class="login-button" (click)="login()">Login</button>
-</div>
+  <button type="submit" [disabled]="!f.valid" mat-raised-button color="accent" class="login-button">Login</button>
+</form>

@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
 import { DurationPipe } from 'src/app/shared/pipes/duration.pipe';
@@ -28,14 +29,14 @@ describe('AddCoursePageComponent', () => {
     });
 
     await TestBed.configureTestingModule({
-      declarations: [ AddCoursePageComponent, DurationPipe ],
+      imports: [FormsModule, ReactiveFormsModule],
+      declarations: [AddCoursePageComponent, DurationPipe],
       providers: [
         { provide: ActivatedRoute, useValue: activatedRouteMock },
         { provide: Router, useValue: routerSpy },
         { provide: CoursesService, useValue: coursesServiceSpy },
       ],
-    })
-    .compileComponents();
+    }).compileComponents();
   });
 
   beforeEach(() => {
