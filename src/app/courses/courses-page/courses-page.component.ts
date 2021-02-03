@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import {
   BehaviorSubject,
   combineLatest,
@@ -48,7 +49,8 @@ export class CoursesPageComponent implements OnInit {
     private route: ActivatedRoute,
     private coursesService: CoursesService,
     private dialog: MatDialog,
-    private unsubscriber: Unsubscriber
+    private unsubscriber: Unsubscriber,
+    public translateService: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -76,8 +78,12 @@ export class CoursesPageComponent implements OnInit {
   deleteCourse(id: string) {
     const confirmDialog = this.dialog.open(ConfirmDialogComponent, {
       data: {
-        title: 'Confirm Remove Course',
-        message: 'Do you really want to delete this course?',
+        title: this.translateService.instant(
+          'PAGES.COURSES.DELETE_COURSE_CONF_DIALOG_TITLE'
+        ),
+        message: this.translateService.instant(
+          'PAGES.COURSES.DELETE_COURSE_CONF_DIALOG_MSG'
+        ),
       },
     });
     confirmDialog

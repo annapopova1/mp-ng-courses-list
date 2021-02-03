@@ -5,8 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
-
-
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   declarations: [LoginPageComponent],
@@ -16,9 +15,8 @@ import { FormsModule } from '@angular/forms';
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
+    SharedModule,
   ],
-  exports: [
-    LoginPageComponent
-  ]
+  exports: [LoginPageComponent],
 })
-export class AuthModule { }
+export class AuthModule {}
