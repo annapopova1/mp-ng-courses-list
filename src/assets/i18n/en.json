@@ -1,0 +1,14 @@
+{
+  "PAGES": {
+    "LOGIN": {
+      "TITLE": "Login",
+      "EMAIL_FIELD_LABEL": "E-mail",
+      "PASSWORD_FIELD_LABEL": "Password",
+      "SUBMIT_BTN": "Login"
+    },
+    "COURSES": {
+      "DELETE_COURSE_CONF_DIALOG_TITLE": "Confirm Remove Course",
+      "DELETE_COURSE_CONF_DIALOG_MSG": "Do you really want to delete this course?"
+    }
+  }
+}

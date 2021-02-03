@@ -11,6 +11,7 @@ import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.componen
 import { MatDialogModule } from '@angular/material/dialog';
 import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
 import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [
@@ -29,12 +30,17 @@ import { RouterModule } from '@angular/router';
     MatInputModule,
     MatIconModule,
     MatDialogModule,
+    TranslateModule.forChild({
+      extend: true,
+    }),
   ],
   exports: [
     DurationPipe,
     SearchPanelComponent,
     ConfirmDialogComponent,
     BreadcrumbsComponent,
+    MatFormFieldModule,
+    TranslateModule,
   ],
 })
-export class SharedModule { }
+export class SharedModule {}

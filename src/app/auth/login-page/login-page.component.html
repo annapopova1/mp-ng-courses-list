@@ -1,18 +1,18 @@
 <form #f="ngForm" (ngSubmit)="login()" class="login-panel">
-  <h3>Login</h3>
+  <h3>{{ 'PAGES.LOGIN.TITLE' | translate }}</h3>
   <p>
     <mat-form-field appearance="fill" class="email-field">
-      <mat-label>E-mail</mat-label>
+      <mat-label>{{ 'PAGES.LOGIN.EMAIL_FIELD_LABEL' | translate }}</mat-label>
       <input type="email" name="login" required matInput #userLogin="ngModel" [(ngModel)]="email">
       <mat-error *ngIf="userLogin.invalid">You must enter a value</mat-error>
     </mat-form-field>
   </p>
   <p>
     <mat-form-field appearance="fill" class="password-field">
-      <mat-label>Password</mat-label>
+      <mat-label>{{ 'PAGES.LOGIN.PASSWORD_FIELD_LABEL' | translate }}</mat-label>
       <input type="password" name="password" required matInput #userPassword="ngModel" [(ngModel)]="password">
       <mat-error *ngIf="userPassword.invalid">You must enter a value</mat-error>
     </mat-form-field>
   </p>
-  <button type="submit" [disabled]="!f.valid" mat-raised-button color="accent" class="login-button">Login</button>
+  <button type="submit" [disabled]="!f.valid" mat-raised-button color="accent" class="login-button">{{ 'PAGES.LOGIN.SUBMIT_BTN' | translate }}</button>
 </form>

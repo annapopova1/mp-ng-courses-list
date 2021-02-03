@@ -1,0 +1,14 @@
+{
+  "PAGES": {
+    "LOGIN": {
+      "TITLE": "Авторизация",
+      "EMAIL_FIELD_LABEL": "Почтовый адрес",
+      "PASSWORD_FIELD_LABEL": "Пароль",
+      "SUBMIT_BTN": "Войти"
+    },
+    "COURSES": {
+      "DELETE_COURSE_CONF_DIALOG_TITLE": "Подтвердите удаление",
+      "DELETE_COURSE_CONF_DIALOG_MSG": "Вы хотите удалить этот курс?"
+    }
+  }
+}

@@ -32,6 +32,7 @@ import { DateInputComponent } from './date-input/date-input.component';
   imports: [
     CommonModule,
     CoursesRoutingModule,
+    SharedModule,
     MatButtonModule,
     MatCardModule,
     MatIconModule,
@@ -41,7 +42,6 @@ import { DateInputComponent } from './date-input/date-input.component';
     MatInputModule,
     MatNativeDateModule,
     MatDatepickerModule,
-    SharedModule,
   ],
   exports: [CoursesPageComponent, CoursesRoutingModule],
   providers: [CoursesService],

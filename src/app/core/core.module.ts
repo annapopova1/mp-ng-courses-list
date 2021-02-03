@@ -6,6 +6,7 @@ import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { LoaderComponent } from './loader/loader.component';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -14,11 +15,7 @@ import { LoaderComponent } from './loader/loader.component';
     PageNotFoundComponent,
     LoaderComponent,
   ],
-  imports: [
-    CommonModule,
-    MatButtonModule,
-    MatIconModule,
-  ],
+  imports: [CommonModule, MatButtonModule, MatIconModule, SharedModule],
   exports: [
     HeaderComponent,
     FooterComponent,
@@ -26,4 +23,4 @@ import { LoaderComponent } from './loader/loader.component';
     LoaderComponent,
   ],
 })
-export class CoreModule { }
+export class CoreModule {}
